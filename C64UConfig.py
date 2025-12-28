@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 
 #
 # Configuration class for loading settings from an INI-style file.
@@ -49,4 +50,13 @@ class Config:
 #
 # Singleton instance of the config file
 #
-config = Config(Path(__file__).parent / "config.ini")
+# config = Config(Path(__file__).parent / "config.ini")
+
+def app_dir() -> Path:
+    # Wenn per PyInstaller gebaut: Pfad zum EXE
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent
+    # Normal im Source-Run: Projektordner (hier: Ordner von C64UConfig.py)
+    return Path(__file__).resolve().parent
+
+config = Config(app_dir() / "config.ini")
